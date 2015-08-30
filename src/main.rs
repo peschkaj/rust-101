@@ -1,21 +1,21 @@
 // Welcome to Rust-101
 // ===================
-// 
+//
 // This is [Rust-101](https://www.ralfj.de/projects/rust-101/), a small tutorial for
 // the [Rust language](https://www.rust-lang.org/). It is intended to be an interactive,
 // hands-on course: I believe the only way to *really* learn a language is to write code
 // in it, so you should be coding during the course.
-// 
+//
 // If you have any questions that are not answered here, check out the "Additional Resources"
 // below. In particular, the IRC channel is filled with awesome people willing to help you! I spent
 // lots of time there ;-)
-// 
+//
 // I will assume some familiarity with programming, and hence not explain the basic
 // concepts common to most languages. Instead, I will focus on what makes Rust special.
 //
 // Why Rust?
 // ---------
-// 
+//
 // When you got here, I am kind of assuming that you already decided to give Rust at
 // least a look, so that I don't have to do much convincing here. But just in
 // case, here's why I think Rust is worth learning:<br/>
@@ -29,40 +29,40 @@
 // a heap), and even without an operating system. In fact, Rust rules out more classes of bugs
 // than languages that achieve safety with a garbage collector: Besides dangling pointers and
 // double-free, Rust also prevents issues such as iterator invalidation and data races.
-// 
-// 
+//
+//
 // Getting started
 // ---------------
-// 
+//
 // You will need to have Rust installed, of course. It is available for download on
 // [the Rust website](https://www.rust-lang.org/). Make sure you get at least version 1.2.
 // More detailed installation instructions are provided in
 // [the second chapter of The Book](https://doc.rust-lang.org/stable/book/installing-rust.html).
 // This will also install `cargo`, the tool responsible for building rust projects (or *crates*).
-// 
+//
 // Next, fetch the Rust-101 source code from the [git repository](https://www.ralfj.de/git/rust-101.git)
 // (also available [on GitHub](https://github.com/RalfJung/rust-101), and as a
 // [zip archive](https://github.com/RalfJung/rust-101/archive/master.zip) in case you don't have git installed).
-// 
+//
 // There is a workspace prepared for you in the `workspace` folder. I suggest you copy this
 // folder somewhere else. Try `cargo build` in that new folder to check that compiling your workspace succeeds.
 // (You can also execute it with `cargo run`, but you'll need to do some work before this will succeed.)
 
 // Course Content
 // --------------
-// 
+//
 // Open `your-workspace/src/part00.rs` in your favorite editor, and follow the link below for
 // the explanations and exercises. You are ready to start. Have fun!
-// 
+//
 // ### Introduction
 //
 // * [Part 00: Algebraic datatypes](part00.html)
 // * [Part 01: Expressions, Inherent methods](part01.html)
 // * [Part 02: Generic types, Traits](part02.html)
 // * [Part 03: Input](part03.html)
-// 
+//
 // ### Basic Rust
-// 
+//
 // * [Part 04: Ownership, Borrowing](part04.html)
 // * [Part 05: Clone](part05.html)
 // * [Part 06: Copy, Lifetimes](part06.html)
@@ -70,16 +70,16 @@
 // * [Part 08: Associated Types, Modules](part08.html)
 // * [Part 09: Iterators](part09.html)
 // * [Part 10: Closures](part10.html)
-// 
+//
 // ### Advanced Rust
-// 
+//
 // * [Part 11: Trait Objects, Box, Lifetime bounds](part11.html)
 // * [Part 12: Rc, Interior Mutability, Cell, RefCell](part12.html)
 // * [Part 13: Concurrency, Arc, Send](part13.html)
 // * [Part 14: Slices, Arrays, External Dependencies](part14.html)
 // * [Part 15: Mutex, Interior Mutability (cont.), RwLock, Sync](part15.html)
 // * [Part 16: Unsafe Rust, Drop](part16.html)
-// 
+//
 #![allow(dead_code, unused_imports, unused_variables, unused_mut, unreachable_code)]
 mod part00;
 mod part01;
@@ -102,16 +102,16 @@ mod part16;
 // To actually run the code of some part (after filling in the blanks, if necessary), simply edit the `main`
 // function.
 fn main() {
-    part00::main();
+    part03::main();
 }
 
 
 // Additional material
 // -------------------
-// 
+//
 // There's tons of useful Rust stuff out there, so let me just put links to some
 // of the most interesting places here:
-// 
+//
 // * [The Rust Book](https://doc.rust-lang.org/stable/book/)
 // * [The Rustonomicon](https://doc.rust-lang.org/nightly/nomicon/)
 // * [Rust by Example](http://rustbyexample.com/)

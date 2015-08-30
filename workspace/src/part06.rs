@@ -17,7 +17,19 @@ impl BigInt {
             other
         } else {
             // **Exercise 06.1**: Fill in this code.
-            unimplemented!()
+            let mut index = self.data.len();
+
+            while index > 0 {
+                index = index - 1;
+
+                if self.data[index] < other.data[index] {
+                    return self;
+                } else if self.data[index] > other.data[index] {
+                    return other;
+                }
+            }
+
+            return self; // bail out: they're equal
         }
     }
 }
@@ -25,10 +37,18 @@ impl BigInt {
 // Now we can write `vec_min`.
 fn vec_min(v: &Vec<BigInt>) -> Option<BigInt> {
     let mut min: Option<BigInt> = None;
-    // If `v` is a shared borrowed vector, then the default for iterating over it is to call `iter`, the iterator that borrows the elements.
+
+    /* If `v` is a shared borrowed vector,
+       then the default for iterating over it is to call `iter`,
+       the iterator that borrows the elements.
+     */
     for e in v {
         let e = e.clone();
-        unimplemented!()
+
+        min = Some(match min {
+            None    => e,
+            Some(n) => e.min_try1(n)
+        });
     }
     min
 }

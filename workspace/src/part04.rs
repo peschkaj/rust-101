@@ -62,11 +62,11 @@ fn mutable_borrow_demo() {
 
 // ## Summary
 // The ownership and borrowing system of Rust enforces the following three rules:
-// 
+//
 // * There is always exactly one owner of a piece of data
 // * If there is an active mutable borrow, then nobody else can have active access to the data
 // * If there is an active shared borrow, then every other active access to the data is also a shared borrow
-// 
+//
 // As it turns out, combined with the abstraction facilities of Rust, this is a very powerful mechanism
 // to tackle many problems beyond basic memory safety. You will see some examples for this soon.
 

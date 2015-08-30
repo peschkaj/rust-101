@@ -3,6 +3,7 @@
 
 // ## Big Numbers
 
+#[derive(Clone)]
 pub struct BigInt {
     pub data: Vec<u64>, // least significant digit first, no trailing zeros
 }
@@ -11,9 +12,9 @@ pub struct BigInt {
 impl BigInt {
     pub fn new(x: u64) -> Self {
         if x == 0 {
-            unimplemented!()
+            BigInt { data: vec![] }
         } else {
-            unimplemented!()
+            BigInt { data: vec![x] }
         }
     }
 
@@ -21,7 +22,7 @@ impl BigInt {
         if self.data.len() == 0 {
             true
         } else {
-            unimplemented!()
+            self.data[self.data.len() - 1] != 0
         }
     }
 
@@ -30,12 +31,34 @@ impl BigInt {
     // still asks us to make our intention of modifying it explicit. This `mut` is *not* part of the
     // type of `from_vec` - the caller has to give up ownership of `v` anyway, so they don't care anymore
     // what you do to it.
-    // 
+    //
     // **Exercise 05.1**: Implement this function.
-    // 
+    //
     // *Hint*: You can use `pop` to remove the last element of a vector.
     pub fn from_vec(mut v: Vec<u64>) -> Self {
-        unimplemented!()
+        while v.len() > 0 && v[v.len() - 1] == 0 {
+            v.pop();
+        }
+
+        BigInt { data: v }
+    }
+
+    pub fn number_of_digits(&self) -> usize {
+        let d = self.data.clone();
+        d.len()
+    }
+
+    pub fn non_zero_digits(&self) -> u64 {
+        let mut c  = 0;
+        let data = self.data.clone();
+
+        for d in data {
+            if d != 0 {
+                c += 1;
+            }
+        }
+
+        c
     }
 }
 
@@ -46,17 +69,20 @@ fn clone_demo() {
     let b2 = BigInt::from_vec(v);
 }
 
-impl Clone for BigInt {
-    fn clone(&self) -> Self {
-        unimplemented!()
-    }
-}
+// impl Clone for BigInt {
+//     fn clone(&self) -> Self {
+//         BigInt { data: self.data.clone() }
+//     }
+// }
 
-// We can also make the type `SomethingOrNothing<T>` implement `Clone`. 
+// We can also make the type `SomethingOrNothing<T>` implement `Clone`.
 use part02::{SomethingOrNothing,Something,Nothing};
 impl<T: Clone> Clone for SomethingOrNothing<T> {
     fn clone(&self) -> Self {
-        unimplemented!()
+        match *self {
+            Nothing => Nothing,
+            Something(ref v) => Something(v.clone()),
+        }
     }
 }
 

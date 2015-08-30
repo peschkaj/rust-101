@@ -30,7 +30,7 @@ fn read_vec() -> Vec<i32> {
     //@ concurrently, that also reads from standard input? The result would be a mess. Hence
     //@ Rust requires us to `lock` standard input if we want to perform large operations on
     //@ it. (See [the documentation](https://doc.rust-lang.org/stable/std/io/struct.Stdin.html) for more
-    //@ details.) 
+    //@ details.)
     for line in stdin.lock().lines() {
         // Rust's type for (dynamic, growable) strings is `String`. However, our variable `line`
         // here is not yet of that type: It has type `io::Result<String>`.
@@ -45,7 +45,7 @@ fn read_vec() -> Vec<i32> {
         //@ there will be a somewhat reasonable error message. Still, you would not want a user to see such
         //@ an error, so in a "real" program, we would have to do proper error handling.
         //@ Can you find the documentation of `Result::unwrap`?
-        //@ 
+        //@
         // I chose the same name (`line`) for the new variable to ensure that I will never, accidentally,
         // access the "old" `line` again.
         let line = line.unwrap();
@@ -100,18 +100,21 @@ pub fn main() {
 // implementations (just compare it to the `impl` block from the previous exercise).
 // You can read this as "For all types `T` satisfying the `Print` trait, I provide an implementation
 // for `SomethingOrNothing<T>`".
-// 
+//
 // Notice that I called the function on `SomethingOrNothing` `print2` to disambiguate from the `print` defined previously.
-// 
+//
 // *Hint*: There is a macro `print!` for printing without appending a newline.
 trait Print {
-    /* Add things here */
+    fn print2(self);
 }
+
 impl<T: Print> SomethingOrNothing<T> {
     fn print2(self) {
         unimplemented!()
     }
 }
+
+impl
 
 // **Exercise 03.2**: Building on exercise 02.2, implement all the things you need on `f32` to make your
 // program work with floating-point numbers.

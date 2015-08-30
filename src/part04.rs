@@ -14,7 +14,7 @@
 //@ What's going wrong here? `first` is a pointer into the vector `v`. The operation `push_back`
 //@ may re-allocate the storage for the vector, in case the old buffer was full. If that happens,
 //@ `first` is now a dangling pointer, and accessing it can crash the program (or worse).
-//@ 
+//@
 //@ It turns out that only the combination of two circumstances can lead to such a bug:
 //@ *aliasing* and *mutation*. In the code above, we have `first` and the buffer of `v`
 //@ being aliases, and when `push_back` is called, the latter is used to perform a mutation.
@@ -27,14 +27,14 @@ fn work_on_vector(v: Vec<i32>) { /* do something */ }
 fn ownership_demo() {
     let v = vec![1,2,3,4];
     work_on_vector(v);
-    /* println!("The first element is: {}", v[0]); */               /* BAD! */
+    println!("The first element is: {}", v[0]);               /* BAD! */
 }
 //@ Rust attaches additional meaning to the argument of `work_on_vector`: The function can assume
 //@ that it entirely *owns* `v`, and hence can do anything with it. When `work_on_vector` ends,
 //@ nobody needs `v` anymore, so it will be deleted (including its buffer on the heap).
 //@ Passing a `Vec<i32>` to `work_on_vector` is considered *transfer of ownership*: Someone used
 //@ to own that vector, but now he gave it on to `take` and has no business with it anymore.
-//@ 
+//@
 //@ If you give a book to your friend, you cannot just come to his place next day and get the book!
 //@ It's no longer yours. Rust makes sure you don't break this rule. Try enabling the commented
 //@ line in `ownership_demo`. Rust will tell you that `v` has been *moved*, which is to say that ownership
@@ -48,13 +48,13 @@ fn ownership_demo() {
 //@ get the same error. That's because `vec_min` demands that the caller transfers ownership of the
 //@ vector. Hence, when `vec_min` finishes, the entire vector is deleted. That's of course not what
 //@ we wanted! Can't we somehow give `vec_min` access to the vector, while retaining ownership of it?
-//@ 
+//@
 //@ Rust calls this *borrowing* the vector, and it works a bit like borrowing does in the real world:
 //@ If you borrow a book to your friend, your friend can have it and work on it (and you can't!)
 //@ as long as the book is still borrowed. Your friend could even borrow the book to someone else.
 //@ Eventually however, your friend has to give the book back to you, at which point you again
 //@ have full control.
-//@ 
+//@
 //@ Rust distinguishes between two kinds of borrows. First of all, there's the *shared* borrow.
 //@ This is where the book metaphor kind of breaks down... you can give a shared borrow of
 //@ *the same data* to lots of different people, who can all access the data. This of course
@@ -92,7 +92,7 @@ fn shared_borrow_demo() {
 //@ this - there is no way to have something like a  NULL pointer. This code creates three shared borrows to `v`:
 //@ The borrow for `first` begins in the 2nd line of the function and lasts all the way to the end. The other two
 //@ borrows, created for calling `vec_min`, only last for the duration of that respective call.
-//@ 
+//@
 //@ Technically, of course, borrows are pointers. Notice that since `vec_min` only gets a shared
 //@ borrow, Rust knows that it cannot mutate `v` in any way. Hence the pointer into the buffer of `v`
 //@ that was created before calling `vec_min` remains valid.
@@ -127,7 +127,7 @@ fn mutable_borrow_demo() {
 //@ enabling the commented-out lines, and watch Rust complain. This is because `vec_inc` could mutate
 //@ the vector structurally (i.e., it could add or remove elements), and hence the pointer `first`
 //@ could become invalid. In other words, Rust keeps us safe from bugs like the one in the C++ snipped above.
-//@ 
+//@
 //@ Above, I said that having a mutable borrow excludes aliasing. But if you look at the code above carefully,
 //@ you may say: "Wait! Don't the `v` in `mutable_borrow_demo` and the `v` in `vec_inc` alias?" And you are right,
 //@ they do. However, the `v` in `mutable_borrow_demo` is not actually usable, it is not *active*: As long as there is an
@@ -135,11 +135,11 @@ fn mutable_borrow_demo() {
 
 // ## Summary
 // The ownership and borrowing system of Rust enforces the following three rules:
-// 
+//
 // * There is always exactly one owner of a piece of data
 // * If there is an active mutable borrow, then nobody else can have active access to the data
 // * If there is an active shared borrow, then every other active access to the data is also a shared borrow
-// 
+//
 // As it turns out, combined with the abstraction facilities of Rust, this is a very powerful mechanism
 // to tackle many problems beyond basic memory safety. You will see some examples for this soon.
 

@@ -17,11 +17,17 @@ type NumberOrNothing = SomethingOrNothing<i32>;
 // an alias for `SomethingOrNothing<T>`.
 impl<T> SomethingOrNothing<T> {
     fn new(o: Option<T>) -> Self {
-        unimplemented!()
+        match o {
+            None => Nothing,
+            Some(t) => Something(t),
+        }
     }
 
     fn to_option(self) -> Option<T> {
-        unimplemented!()
+        match self {
+            Nothing => None,
+            Something(t) => Some(t),
+        }
     }
 }
 // You can call static functions, and in particular constructors, as demonstrated in `call_constructor`.
@@ -42,7 +48,7 @@ pub fn vec_min<T: Minimum>(v: Vec<T>) -> SomethingOrNothing<T> {
             Nothing => e,
             // Here, we can now call the `min` function of the trait.
             Something(n) => {
-                unimplemented!()
+                e.min(n)
             }
         });
     }
@@ -53,7 +59,7 @@ pub fn vec_min<T: Minimum>(v: Vec<T>) -> SomethingOrNothing<T> {
 // To make `vec_min` usable with a `Vec<i32>`, we implement the `Minimum` trait for `i32`.
 impl Minimum for i32 {
     fn min(self, b: Self) -> Self {
-        unimplemented!()
+        if self < b { self } else { b }
     }
 }
 

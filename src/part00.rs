@@ -24,12 +24,14 @@ enum NumberOrNothing {
 //@ the minimum function, we need just one more ingredient: `Vec<i32>` is the type of
 //@ (growable) arrays of numbers, and we will use that as our list type.
 
+use self::NumberOrNothing::{Number,Nothing};
+
 // Observe how in Rust, the return type comes *after* the arguments.
 fn vec_min(vec: Vec<i32>) -> NumberOrNothing {
     //@ In the function, we first need some variable to store the minimum as computed so far.
-    //@ Since we start out with nothing computed, this will again be a 
+    //@ Since we start out with nothing computed, this will again be a
     //@ "number or nothing":
-    let mut min = NumberOrNothing::Nothing;
+    let mut min = Nothing;
     //@ We do not have to write a type next to `min`, Rust can figure that out automatically
     //@ (a bit like `auto` in C++11). Also notice the `mut`: In Rust, variables are
     //@ immutable per default, and you need to tell Rust if you want
@@ -41,14 +43,14 @@ fn vec_min(vec: Vec<i32>) -> NumberOrNothing {
         // number in there? This is what pattern matching can do:
         match min {
             // In this case (*arm*) of the `match`, `min` is currently nothing, so let's just make it the number `el`.
-            NumberOrNothing::Nothing => {
-                min = NumberOrNothing::Number(el);                  /*@*/
+            Nothing => {
+                min = Number(el);                  /*@*/
             },
             // In this arm, `min` is currently the number `n`, so let's compute the new minimum and store it.
             //@ We will write the function `min_i32` just after we completed this one.
-            NumberOrNothing::Number(n) => {
+            Number(n) => {
                 let new_min = min_i32(n, el);                       /*@*/
-                min = NumberOrNothing::Number(new_min);             /*@*/
+                min = Number(new_min);             /*@*/
             }
         }
     }
@@ -71,7 +73,7 @@ fn min_i32(a: i32, b: i32) -> i32 {
 // Indeed, we can: The following line tells Rust to take
 // the constructors of `NumberOrNothing` into the local namespace.
 // Try moving that above the function, and removing all the occurrences `NumberOrNothing::`.
-use self::NumberOrNothing::{Number,Nothing};
+// use self::NumberOrNothing::{Number,Nothing};
 
 // To call this function, we now just need a list. Of course, ultimately we want to ask the user for
 // a list of numbers, but for now, let's just hard-code something.
@@ -79,7 +81,7 @@ use self::NumberOrNothing::{Number,Nothing};
 //@ `vec!` is a *macro* (as you can tell from the `!`) that constructs a constant `Vec<_>` with the given
 //@ elements.
 fn read_vec() -> Vec<i32> {
-    vec![18,5,7,1,9,27]                                             /*@*/
+    vec![18,5,7,2,9,27]                                             /*@*/
 }
 
 // Of course, we would also like to actually see the result of the computation, so we need to print the result.

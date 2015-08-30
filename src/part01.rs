@@ -87,7 +87,7 @@ impl NumberOrNothing {
 //@ is independent of the definition of the type. `self` is like `this` in other
 //@ languages, and its type is always implicit. So `print` is now a method that
 //@ takes as first argument a `NumberOrNothing`, just like `print_number_or_nothing`.
-//@ 
+//@
 //@ Try making `number_or_default` from above an inherent method as well!
 
 // With our refactored functions and methods, `main` now looks as follows:
@@ -103,7 +103,21 @@ pub fn main() {
 // `main.rs` to run this code.
 
 // **Exercise 01.1**: Write a funtion `vec_sum` that computes the sum of all values of a `Vec<i32>`.
+fn vec_sum(vec: Vec<i32>) -> i32 {
+    let mut sum = 0;
+
+    for n in vec {
+        sum += n;
+    }
+
+    sum
+}
 
 // **Exercise 01.2**: Write a function `vec_print` that takes a vector and prints all its elements.
+fn vec_print(vec: Vec<i32>) {
+    for e in vec {
+        println!("{}", e);
+    }
+}
 
 //@ [index](main.html) | [previous](part00.html) | [raw source](https://www.ralfj.de/git/rust-101.git/blob_plain/HEAD:/workspace/src/part01.rs) | [next](part02.html)
