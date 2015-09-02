@@ -63,7 +63,7 @@ impl<T: Copy> Copy for SomethingOrNothing<T> {}
 
 fn head<T>(v: &Vec<T>) -> Option<&T> {
     if v.len() > 0 {
-        unimplemented!()
+        Some(&v[0])
     } else {
         None
     }
