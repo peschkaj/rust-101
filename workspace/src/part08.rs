@@ -8,16 +8,19 @@ use part05::BigInt;
 // So, let us write a function to "add with carry", and give it the appropriate type. Notice Rust's native support for pairs.
 fn overflowing_add(a: u64, b: u64, carry: bool) -> (u64, bool) {
     let sum = a.wrapping_add(b);
+    let carry_n = if carry { 1 } else { 0 };
     // If an overflow happened, then the sum will be smaller than *both* summands. Without an overflow, of course, it will be
     // at least as large as both of them. So, let's just pick one and check.
     if sum >= a {
         // The addition did not overflow. <br/>
         // **Exercise 08.1**: Write the code to handle adding the carry in this case.
-        unimplemented!()
+        let sum_total = u64::wrapping_add(sum, carry_n);
+        let had_overflow = sum_total < sum;
+        (sum_total, had_overflow)
     } else {
         // Otherwise, the addition *did* overflow. It is impossible for the addition of the carry
         // to overflow again, as we are just adding 0 or 1.
-        unimplemented!()
+        (sum + carry_n, true)
     }
 }
 
@@ -33,28 +36,36 @@ fn test_overflowing_add() {
 }
 
 // ## Associated Types
-impl ops::Add<BigInt> for BigInt {
+// impl ops::Add<BigInt> for BigInt {
 
-    // Here, we choose the result type to be again `BigInt`.
-    type Output = BigInt;
+//     // Here, we choose the result type to be again `BigInt`.
+//     type Output = BigInt;
 
-    // Now we can write the actual function performing the addition.
-    fn add(self, rhs: BigInt) -> Self::Output {
-        // We know that the result will be *at least* as long as the longer of the two operands,
-        // so we can create a vector with sufficient capacity to avoid expensive reallocations.
-        let max_len = cmp::max(self.data.len(), rhs.data.len());
-        let mut result_vec:Vec<u64> = Vec::with_capacity(max_len);
-        let mut carry = false; /* the current carry bit */
-        for i in 0..max_len {
-            let lhs_val = if i < self.data.len() { self.data[i] } else { 0 };
-            let rhs_val = if i < rhs.data.len() { rhs.data[i] } else { 0 };
-            // Compute next digit and carry. Then, store the digit for the result, and the carry for later.
-            unimplemented!()
-        }
-        // **Exercise 08.2**: Handle the final `carry`, and return the sum.
-        unimplemented!()
-    }
-}
+//     // Now we can write the actual function performing the addition.
+//     fn add(self, rhs: BigInt) -> Self::Output {
+//         // We know that the result will be *at least* as long as the longer of the two operands,
+//         // so we can create a vector with sufficient capacity to avoid expensive reallocations.
+//         let max_len = cmp::max(self.data.len(), rhs.data.len());
+//         let mut result_vec:Vec<u64> = Vec::with_capacity(max_len);
+//         let mut carry = false; /* the current carry bit */
+//         for i in 0..max_len {
+//             let lhs_val = if i < self.data.len() { self.data[i] } else { 0 };
+//             let rhs_val = if i < rhs.data.len() { rhs.data[i] } else { 0 };
+//             // Compute next digit and carry. Then, store the digit for the result, and the carry for later.
+
+//             let (sum, new_carry) = overflowing_add(lhs_val, rhs_val, carry);
+//             result_vec.push(sum);
+//             carry = new_carry;
+//         }
+//         // **Exercise 08.2**: Handle the final `carry`, and return the sum.
+
+//         if carry {
+//             result_vec.push(1);
+//         }
+
+//         BigInt { data: result_vec }
+//     }
+// }
 
 // ## Traits and borrowed types
 
@@ -65,11 +76,100 @@ impl<'a, 'b> ops::Add<&'a BigInt> for &'b BigInt {
     type Output = BigInt;
     fn add(self, rhs: &'a BigInt) -> Self::Output {
         // **Exercise 08.3**: Implement this function.
-        unimplemented!()
+
+        let max_len = cmp::max(self.data.len(), rhs.data.len());
+        let mut result_vec:Vec<u64> = Vec::with_capacity(max_len);
+        let mut carry = false;
+        for i in 0..max_len {
+            let lhs_val = if i < self.data.len() { self.data[i] } else { 0 };
+            let rhs_val = if i < rhs.data.len() { rhs.data[i] } else { 0 };
+
+            let (sum, new_carry) = overflowing_add(lhs_val, rhs_val, carry);
+            result_vec.push(sum);
+            carry = new_carry;
+        }
+
+        if carry {
+            result_vec.push(1);
+        }
+
+        BigInt { data: result_vec }
     }
 }
 
 // **Exercise 08.4**: Implement the two missing combinations of arguments for `Add`. You should not have to duplicate the implementation.
+impl<'a> ops::Add<BigInt> for &'a BigInt {
+    type Output = BigInt;
+    #[inline]
+    fn add(self, rhs: BigInt) -> Self::Output {
+        self + &rhs
+    }
+}
+
+impl<'a> ops::Add<&'a BigInt> for BigInt {
+    type Output = BigInt;
+    #[inline]
+    fn add(self, rhs: BigInt) -> Self::Output {
+        &self + rhs
+    }
+}
+
+impl ops::Add<BigInt> for BigInt {
+    type Output = BigInt;
+    #[inline]
+    fn add(self, rhs: BigInt) -> Self::Output {
+        &self + &rhs
+    }
+}
+
+impl<'a, 'b> ops::Sub<&'a BigInt> for &'b BigInt {
+    type Output = BigInt;
+
+    fn sub(self, rhs: &'a BigInt) -> Self::Output {
+        let max_len = cmp::max(self.data.len(), rhs.data.len());
+        let mut result_vec:Vec<u64> = Vec::with_capacity(max_len);
+        let mut carry:bool = false;
+
+        for i in 0..max_len {
+            let lhs_val = if i < self.data.len() { self.data[i] } else { 0 };
+            let rhs_val = if i < rhs.data.len() { rhs.data[i] } else { 0 };
+            let (sum, new_carry) = overflowing_sub(lhs_val, rhs_val, carry);
+
+            result_vec.push(sum);
+            carry = new_carry;
+        }
+
+        if carry {
+            panic!("Wrapping subtraction of BigInt");
+        }
+
+        BigInt::from_vec(result_vec)
+    }
+}
+
+impl<'a> ops::Sub<BigInt> for &'a BigInt {
+    type Output = BigInt;
+    #[inline]
+    fn sub(self, rhs: BigInt) -> Self::Output {
+        self - &rhs
+    }
+}
+
+impl<'a> ops::Sub<&'a BigInt> for BigInt {
+    type Output = BigInt;
+    #[inline]
+    fn sub(self, rhs: &'a BigInt) -> Self::Output {
+        &self - rhs
+    }
+}
+
+impl ops::Sub<BigInt> for BigInt {
+    type Output = BigInt;
+    #[inline]
+    fn sub(self, rhs: BigInt) -> Self::Output {
+        &self - &rhs
+    }
+}
 
 // ## Modules
 
@@ -78,7 +178,7 @@ impl<'a, 'b> ops::Add<&'a BigInt> for &'b BigInt {
 mod tests {
     use part05::BigInt;
 
-    /*#[test]*/
+    #[test]
     fn test_add() {
         let b1 = BigInt::new(1 << 32);
         let b2 = BigInt::from_vec(vec![0, 1]);

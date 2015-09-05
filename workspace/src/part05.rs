@@ -86,6 +86,16 @@ impl<T: Clone> Clone for SomethingOrNothing<T> {
     }
 }
 
+use std::fmt;
+impl<T: fmt::Display> fmt::Display for SomethingOrNothing<T> {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Something(ref t) => t.fmt(f),
+            Nothing          => "Nothing".fmt(f),
+        }
+    }
+}
+
 // **Exercise 05.2**: Write some more functions on `BigInt`. What about a function that returns the number of
 // digits? The number of non-zero digits? The smallest/largest digit? Of course, these should all just borrow `self`.
 
