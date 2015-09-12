@@ -14,7 +14,7 @@ trait Action {
 impl BigInt {
     fn act_v1<A: Action>(&self, mut a: A) {
         for digit in self {
-            unimplemented!()
+            a.do_action(digit);
         }
     }
 }
@@ -27,7 +27,7 @@ impl Action for PrintWithString {
     // Here we perform the actual printing of the prefix and the digit. We're not making use of our ability to
     // change `self` here, but we could replace the prefix if we wanted.
     fn do_action(&mut self, digit: u64) {
-        unimplemented!()
+        println!("{}{}", self.prefix, digit);
     }
 }
 
@@ -40,25 +40,29 @@ fn print_with_prefix_v1(b: &BigInt, prefix: String) {
 // Here's a small main function, demonstrating the code above in action. Remember to edit `main.rs` to run it.
 pub fn main() {
     let bignum = BigInt::new(1 << 63) + BigInt::new(1 << 16) + BigInt::new(1 << 63);
-    print_with_prefix_v1(&bignum, "Digit: ".to_string());
+    print_enumerated(&bignum.data);//, "Digit: ".to_string());
 }
 
 // ## Closures
 
-// This defines `act` very similar to above, but now we demand `A` to be the type of a closure that mutates its borrowed environment,
+// This defines `act` very similar to above,
+// but now we demand `A` to be the type of
+// a closure that mutates its borrowed environment,
 // takes a digit, and returns nothing.
 impl BigInt {
     fn act<A: FnMut(u64)>(&self, mut a: A) {
         for digit in self {
-            // We can call closures as if they were functions - but really, what's happening here is translated to essentially what we wrote above, in `act_v1`.
-            unimplemented!()
+            // We can call closures as if they were functions.
+            // but really, what's happening here is translated to
+            // essentially what we wrote above, in `act_v1`.
+            a(digit);
         }
     }
 }
 
 // Now that we saw how to write a function that operates on closures, let's see how to write a closure.
 pub fn print_with_prefix(b: &BigInt, prefix: String) {
-    b.act(|digit| println!("{}{}", prefix, digit) );
+    b.act(|d| println!("{}{}", prefix, d) );
 }
 // You can change `main` to call this function, and you should notice - nothing, no difference in behavior.
 // But we wrote much less boilerplate code!
@@ -67,7 +71,7 @@ pub fn print_with_prefix(b: &BigInt, prefix: String) {
 // For example, we can use that to count the digits as they are printed.
 pub fn print_and_count(b: &BigInt) {
     let mut count: usize = 0;
-    b.act(|digit| { println!("{}: {}", count, digit); count = count +1; } );
+    b.act(|d| { println!("{}: {}", count, d); count = count +1; } );
     println!("There are {} digits", count);
 }
 

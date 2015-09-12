@@ -109,7 +109,7 @@ impl<'a> ops::Add<BigInt> for &'a BigInt {
 impl<'a> ops::Add<&'a BigInt> for BigInt {
     type Output = BigInt;
     #[inline]
-    fn add(self, rhs: BigInt) -> Self::Output {
+    fn add(self, rhs: &'a BigInt) -> Self::Output {
         &self + rhs
     }
 }
@@ -122,54 +122,54 @@ impl ops::Add<BigInt> for BigInt {
     }
 }
 
-impl<'a, 'b> ops::Sub<&'a BigInt> for &'b BigInt {
-    type Output = BigInt;
+// impl<'a, 'b> ops::Sub<&'a BigInt> for &'b BigInt {
+//     type Output = BigInt;
 
-    fn sub(self, rhs: &'a BigInt) -> Self::Output {
-        let max_len = cmp::max(self.data.len(), rhs.data.len());
-        let mut result_vec:Vec<u64> = Vec::with_capacity(max_len);
-        let mut carry:bool = false;
+//     fn sub(self, rhs: &'a BigInt) -> Self::Output {
+//         let max_len = cmp::max(self.data.len(), rhs.data.len());
+//         let mut result_vec:Vec<u64> = Vec::with_capacity(max_len);
+//         let mut carry:bool = false;
 
-        for i in 0..max_len {
-            let lhs_val = if i < self.data.len() { self.data[i] } else { 0 };
-            let rhs_val = if i < rhs.data.len() { rhs.data[i] } else { 0 };
-            let (sum, new_carry) = overflowing_sub(lhs_val, rhs_val, carry);
+//         for i in 0..max_len {
+//             let lhs_val = if i < self.data.len() { self.data[i] } else { 0 };
+//             let rhs_val = if i < rhs.data.len() { rhs.data[i] } else { 0 };
+//             let (sum, new_carry) = overflowing_sub(lhs_val, rhs_val, carry);
 
-            result_vec.push(sum);
-            carry = new_carry;
-        }
+//             result_vec.push(sum);
+//             carry = new_carry;
+//         }
 
-        if carry {
-            panic!("Wrapping subtraction of BigInt");
-        }
+//         if carry {
+//             panic!("Wrapping subtraction of BigInt");
+//         }
 
-        BigInt::from_vec(result_vec)
-    }
-}
+//         BigInt::from_vec(result_vec)
+//     }
+// }
 
-impl<'a> ops::Sub<BigInt> for &'a BigInt {
-    type Output = BigInt;
-    #[inline]
-    fn sub(self, rhs: BigInt) -> Self::Output {
-        self - &rhs
-    }
-}
+// impl<'a> ops::Sub<BigInt> for &'a BigInt {
+//     type Output = BigInt;
+//     #[inline]
+//     fn sub(self, rhs: BigInt) -> Self::Output {
+//         self - &rhs
+//     }
+// }
 
-impl<'a> ops::Sub<&'a BigInt> for BigInt {
-    type Output = BigInt;
-    #[inline]
-    fn sub(self, rhs: &'a BigInt) -> Self::Output {
-        &self - rhs
-    }
-}
+// impl<'a> ops::Sub<&'a BigInt> for BigInt {
+//     type Output = BigInt;
+//     #[inline]
+//     fn sub(self, rhs: &'a BigInt) -> Self::Output {
+//         &self - rhs
+//     }
+// }
 
-impl ops::Sub<BigInt> for BigInt {
-    type Output = BigInt;
-    #[inline]
-    fn sub(self, rhs: BigInt) -> Self::Output {
-        &self - &rhs
-    }
-}
+// impl ops::Sub<BigInt> for BigInt {
+//     type Output = BigInt;
+//     #[inline]
+//     fn sub(self, rhs: BigInt) -> Self::Output {
+//         &self - &rhs
+//     }
+// }
 
 // ## Modules
 

@@ -18,10 +18,11 @@ impl<'a> Iterator for Iter<'a> {
         // First, check whether there's any more digits to return.
         if self.idx == 0 {
             // We already returned all the digits, nothing to do.
-            unimplemented!()
+            None
         } else {
             // Otherwise: Decrement, and return next digit.
-            unimplemented!()
+            self.idx = self.idx - 1;
+            Some(self.num.data[self.idx])
         }
     }
 }
@@ -29,14 +30,14 @@ impl<'a> Iterator for Iter<'a> {
 // All we need now is a function that creates such an iterator for a given `BigInt`.
 impl BigInt {
     fn iter(&self) -> Iter {
-        unimplemented!()
+        Iter { num: self, idx: self.data.len() }
     }
 }
 
 // We are finally ready to iterate! Remember to edit `main.rs` to run this function.
 pub fn main() {
     let b = BigInt::new(1 << 63) + BigInt::new(1 << 16) + BigInt::new(1 << 63);
-    for digit in b.iter() {
+    for digit in &b {
         println!("{}", digit);
     }
 }
@@ -58,7 +59,7 @@ fn print_digits_v2(b: &BigInt) {
 }
 
 // **Exercise 09.1**: Write a testcase for the iterator, making sure it yields the corrects numbers.
-// 
+//
 // **Exercise 09.2**: Write a function `iter_ldf` that iterators over the digits with the least-significant
 // digits coming first. Write a testcase for it.
 
